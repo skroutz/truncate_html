@@ -18,7 +18,7 @@ describe TruncateHtmlHelper do
 
   before(:each) do
     @original_html = '<p>foo</p>'
-    @original_html.stub!(:html_safe).and_return(@original_html)
+    @original_html.stub(:html_safe).and_return(@original_html)
   end
 
   it 'creates an instance of HtmlTruncator and calls truncate on it' do
@@ -29,7 +29,7 @@ describe TruncateHtmlHelper do
 
   it 'calls truncate on the HtmlTruncator object' do
     truncator = double(truncate: @original_html)
-    TruncateHtml::HtmlTruncator.stub!(:new).and_return(truncator)
+    TruncateHtml::HtmlTruncator.stub(:new).and_return(truncator)
     truncator.should_receive(:truncate).and_return(@original_html)
     truncator.truncate_html('foo')
   end
