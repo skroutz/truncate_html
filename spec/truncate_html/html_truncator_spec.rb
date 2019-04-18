@@ -177,7 +177,7 @@ This is ugly html.
     it 'truncates before the length param if the break_token is before the token at "length"' do
       expect(truncate('This is line one. <!-- truncate --> This is line two.',
                       length: 30, break_token: '<!-- truncate -->')).
-        to eq 'This is line one.'
+        to eq 'This is line one....'
     end
   end
 
@@ -195,7 +195,7 @@ This is ugly html.
     it 'truncates before the length param if the break_token is before the token at "length"' do
       expect(truncate('This is line one. <!-- break --> This is line two.',
                       length: 30, break_token: '<!-- break -->')).
-        to eq 'This is line one.'
+        to eq 'This is line one....'
     end
   end
 
@@ -213,7 +213,7 @@ This is ugly html.
     it 'truncates before the length param if the break_token is before the token at "length"' do
       expect(truncate('This is line one. <break /> This is line two.',
                       length: 30, break_token: '<break />')).
-        to eq 'This is line one.'
+        to eq 'This is line one....'
     end
   end
 
@@ -231,7 +231,7 @@ This is ugly html.
     it 'truncates before the length param if the break_token is before the token at "length"' do
       expect(truncate('This is line one. foobar This is line two.',
                       length: 30, break_token: 'foobar')).
-        to eq 'This is line one.'
+        to eq 'This is line one....'
     end
   end
 
@@ -240,6 +240,16 @@ This is ugly html.
       expect(truncate('<h1>hello <!-- stuff --> and <!-- la --> goodbye</h1>',
                       length: 15)).
         to eq '<h1>hello <!-- stuff --> and <!-- la -->...</h1>'
+    end
+  end
+
+  context 'when the break_token and a custom omission options are used' do
+    it 'includes the custom omission after the truncation' do
+      expect(truncate('This is the time to truncate this. Do it properly!',
+                      length: 50,
+                      break_token: 'truncate',
+                      omission: ' <a href="path">MORE</a>')).
+        to eq 'This is the time to <a href="path">MORE</a>'
     end
   end
 end

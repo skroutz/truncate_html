@@ -16,7 +16,7 @@ module TruncateHtml
       return @omission if @chars_remaining < 0
 
       @original_html.html_tokens.each do |token|
-        if @chars_remaining <= 0 || truncate_token?(token)
+        if @chars_remaining <= 0
           close_open_tags
           break
         else
@@ -49,8 +49,10 @@ module TruncateHtml
     end
 
     def process_token(token)
-      append_to_result(token)
-      if token.html_tag?
+      append_to_result(token) if !truncate_token?(token)
+      if truncate_token?(token)
+        @chars_remaining = 0
+      elsif token.html_tag?
         if token.open_tag?
           @open_tags << token
         else
@@ -58,9 +60,10 @@ module TruncateHtml
         end
       elsif !token.html_comment?
         @chars_remaining -= (@word_boundary ? token.length : token[0, @chars_remaining].length)
-        if @chars_remaining <= 0
-          @truncated_html[-1] = @truncated_html[-1].rstrip + @omission
-        end
+      end
+
+      if @chars_remaining <= 0
+        @truncated_html[-1] = @truncated_html[-1].rstrip + @omission
       end
     end
 
