@@ -7,7 +7,6 @@ class Truncator
 end
 
 describe TruncateHtmlHelper do
-
   def truncator
     @truncator ||= Truncator.new
   end
@@ -40,5 +39,4 @@ describe TruncateHtmlHelper do
       expect(truncator.truncate_html(nil)).to be_kind_of(String)
     end
   end
-
 end

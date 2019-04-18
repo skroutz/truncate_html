@@ -1,18 +1,20 @@
 module TruncateHtml
   class HtmlTruncator
-
     def initialize(original_html, options = {})
       @original_html   = original_html
       length           = options[:length]       || TruncateHtml.configuration.length
       @omission        = options[:omission]     || TruncateHtml.configuration.omission
-      @word_boundary   = (options.has_key?(:word_boundary) ? options[:word_boundary] : TruncateHtml.configuration.word_boundary)
+      @word_boundary   = (options.key?(:word_boundary) ? options[:word_boundary] : TruncateHtml.configuration.word_boundary)
       @break_token     = options[:break_token] || TruncateHtml.configuration.break_token || nil
       @chars_remaining = length - @omission.length
-      @open_tags, @closing_tags, @truncated_html = [], [], ['']
+      @open_tags = []
+      @closing_tags = []
+      @truncated_html = ['']
     end
 
     def truncate
       return @omission if @chars_remaining < 0
+
       @original_html.html_tokens.each do |token|
         if @chars_remaining <= 0 || truncate_token?(token)
           close_open_tags
@@ -40,9 +42,7 @@ module TruncateHtml
       if word_boundary
         term_regexp = Regexp.new("^.*#{word_boundary.source}")
         match = out.match(term_regexp)
-        if match && match[0] != out
-          out = match[0] + @closing_tags.join
-        end
+        out = match[0] + @closing_tags.join if match && match[0] != out
       end
 
       out
@@ -82,7 +82,7 @@ module TruncateHtml
     end
 
     def remove_latest_open_tag(close_tag)
-      (0...@open_tags.length).to_a.reverse.each do |index|
+      (0...@open_tags.length).to_a.reverse_each do |index|
         if @open_tags[index].matching_close_tag == close_tag
           @open_tags.delete_at(index)
           break
@@ -91,7 +91,7 @@ module TruncateHtml
     end
 
     def truncate_token?(token)
-      @break_token and token == @break_token
+      @break_token && (token == @break_token)
     end
   end
 end
