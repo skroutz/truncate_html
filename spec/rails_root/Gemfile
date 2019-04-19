@@ -1,5 +1,5 @@
 # Edit this Gemfile to bundle your application's dependencies.
-source 'http://gemcutter.org'
+source 'https://rubygems.org'
 group :development, :test do
   gem 'rails', '~> 5.1.6.2'
   gem 'rspec-rails', '~> 3.8.0'
