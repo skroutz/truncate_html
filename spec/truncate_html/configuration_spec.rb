@@ -5,12 +5,12 @@ describe TruncateHtml::Configuration do
   describe 'self.configure' do
 
     it 'yields the configuration object' do
-      lambda do
+      expect do
         TruncateHtml.configure do |config|
-          config.should be_kind_of(TruncateHtml::Configuration)
+          expect(config).to be_kind_of(TruncateHtml::Configuration)
           throw :yay_it_yielded
         end
-      end.should throw_symbol(:yay_it_yielded)
+      end.to throw_symbol(:yay_it_yielded)
     end
 
   end
