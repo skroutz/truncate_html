@@ -1,8 +1,6 @@
-# Encoding: UTF-8
 require File.join(File.dirname(__FILE__), '..', 'spec_helper')
 
 describe TruncateHtml::HtmlTruncator do
-
   def truncate(html, opts = {})
     html_string = TruncateHtml::HtmlString.new(html)
     TruncateHtml::HtmlTruncator.new(html_string, opts).truncate
@@ -24,13 +22,13 @@ describe TruncateHtml::HtmlTruncator do
     context 'and a custom omission value is passed' do
       it 'retains the omission text' do
         expect(
-          truncate("testtest", length: 10, omission: '..', word_boundary: false)
+          truncate('testtest', length: 10, omission: '..', word_boundary: false)
         ).to eq 'testtest..'
       end
 
       it 'handles multibyte characters' do
         expect(
-          truncate("prüfenprüfen", length: 8, omission: '..', word_boundary: false)
+          truncate('prüfenprüfen', length: 8, omission: '..', word_boundary: false)
         ).to eq 'prüfen..'
       end
     end
@@ -54,7 +52,7 @@ describe TruncateHtml::HtmlTruncator do
     it 'is respectful of closing tags' do
       expect(truncate('<p>hmmm this <em>should</em> be okay. I think...</p>',
                       length: 28, omission: '', word_boundary: /\S[\.\?\!]/)).
-        to eq "<p>hmmm this <em>should</em> be okay.</p>"
+        to eq '<p>hmmm this <em>should</em> be okay.</p>'
     end
   end
 
@@ -62,17 +60,17 @@ describe TruncateHtml::HtmlTruncator do
     expect(truncate('a b c', length: 4, omission: '...')).to eq 'a...'
   end
 
-  it "includes omission even on the edge (issue #18)" do
+  it 'includes omission even on the edge (issue #18)' do
     opts = { word_boundary: false, length: 12 }
     expect(truncate('One two three', opts)).to eq 'One two t...'
   end
 
-  it "never returns a string longer than :length" do
-    expect(truncate("test this shit", length: 10)).to eq 'test...'
+  it 'never returns a string longer than :length' do
+    expect(truncate('test this shit', length: 10)).to eq 'test...'
   end
 
   it 'supports omissions longer than the maximum length' do
-    expect{ truncate('', length: 1, omission: '...') }.to_not raise_error
+    expect { truncate('', length: 1, omission: '...') }.to_not raise_error
   end
 
   it 'returns the omission when the specified length is smaller than the omission' do
@@ -110,24 +108,23 @@ describe TruncateHtml::HtmlTruncator do
   end
 
   it 'handles multibyte characters and leaves them in the result' do
-    html     = '<p>Look at our multibyte characters ā ž <a href = "awesomeful.net">this</a> link for randomness ā ž</p>'
+    html = '<p>Look at our multibyte characters ā ž <a href = "awesomeful.net">this</a> link for randomness ā ž</p>'
     expect(truncate(html, length: html.length)).to eq html
   end
 
-  #unusual, but just covering my ass
+  # unusual, but just covering my ass
   it 'recognizes the multiline html properly' do
-    html = <<-END_HTML
-      <div id="foo"
-            class="bar">
-This is ugly html.
-</div>
+    html = <<~END_HTML
+            <div id="foo"
+                  class="bar">
+      This is ugly html.
+      </div>
     END_HTML
     expect(truncate(html, length: 12)).to eq ' <div id="foo" class="bar"> This is...</div>'
   end
 
-  %w(br hr img).each do |unpaired_tag|
+  %w[br hr img].each do |unpaired_tag|
     context "when the html contains a #{unpaired_tag} tag" do
-
       context "and the #{unpaired_tag} does not have the closing slash" do
         it "does not close the #{unpaired_tag} tag" do
           html      = "<div>Some before. <#{unpaired_tag}>and some after</div>"
@@ -145,7 +142,6 @@ This is ugly html.
           expect(truncate(html_caps, length: 19)).to eq "<div>Some before. <#{unpaired_tag.capitalize} />and...</div>"
         end
       end
-
     end
   end
 
@@ -159,8 +155,8 @@ This is ugly html.
     “我现在使用的是中文的拼音。”<br>
     测试一下具体的truncate</em>html功能。</p>"
 
-    expect(truncate(html, omission: "", length: 50)).
-      to include "<p>“我现在使用的是中文的拼音。”<br>"
+    expect(truncate(html, omission: '', length: 50)).
+      to include '<p>“我现在使用的是中文的拼音。”<br>'
   end
 
   context 'when the break_token option is set as <!-- truncate -->' do
