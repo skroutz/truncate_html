@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    truncate_html (0.9.3.skroutz.1)
+    truncate_html (0.9.3.skroutz.2)
 
 GEM
   remote: http://rubygems.org/
@@ -131,3 +131,6 @@ DEPENDENCIES
   rails (~> 5.1.6.2)
   rspec-rails (~> 3.8.0)
   truncate_html!
+
+BUNDLED WITH
+   1.17.3
